@@ -1,12 +1,12 @@
-# CLAUDE.md - AI Assistant Guide for hailo-agent-tools
+# CLAUDE.md - AI Assistant Guide for hailo-agent
 
 This document provides context and guidelines for AI assistants working on this repository.
 
 ## Project Overview
 
-**hailo-agent-tools** is an interactive CLI chat agent that uses Hailo LLM models with function calling capabilities. The agent automatically discovers tools and allows the LLM to call them during conversations.
+**hailo-agent** is an interactive CLI chat agent that uses Hailo LLM models with function calling capabilities. The agent automatically discovers tools and allows the LLM to call them during conversations.
 
-This project was extracted from the larger `hailo-ai/hailo-apps` repository to provide a focused, standalone implementation of the agent tools framework.
+This project was extracted from the larger `hailo-ai/hailo-apps` repository and restructured into a clean, flat package layout.
 
 ### Key Features
 
@@ -19,59 +19,53 @@ This project was extracted from the larger `hailo-ai/hailo-apps` repository to p
 ## Repository Structure
 
 ```
-hailo-agent-tools/
-├── hailo_apps/
-│   ├── config/
-│   │   └── config_manager.py       # Configuration management
-│   └── python/
-│       ├── core/
-│       │   └── common/             # Core utilities
-│       │       ├── core.py         # Main utilities (parser, model resolution)
-│       │       ├── defines.py      # Constants and defaults
-│       │       ├── hailo_logger.py # Logging infrastructure
-│       │       ├── parser.py       # CLI argument parser
-│       │       ├── installation_utils.py # Device detection
-│       │       ├── camera_utils.py # Camera device utilities
-│       │       └── hef_utils.py    # HEF model utilities
-│       └── gen_ai_apps/
-│           ├── agent_tools_example/    # Main agent application
-│           │   ├── agent.py            # Entry point
-│           │   ├── config.py           # LLM configuration
-│           │   ├── state_manager.py    # Context state management
-│           │   ├── system_prompt.py    # System prompt generation
-│           │   ├── yaml_config.py      # YAML config loader
-│           │   ├── cli_state.py        # CLI state utilities
-│           │   ├── tools/              # Tool implementations
-│           │   │   ├── base.py         # Base tool class
-│           │   │   ├── math/           # Math operations tool
-│           │   │   ├── weather/        # Weather API tool
-│           │   │   ├── rgb_led/        # RGB LED control
-│           │   │   ├── servo/          # Servo motor control
-│           │   │   ├── elevator/       # Elevator demo tool
-│           │   │   └── _template/      # Template for new tools
-│           │   └── testing/            # Test framework
-│           └── gen_ai_utils/
-│               ├── llm_utils/          # LLM utilities
-│               │   ├── agent_utils.py      # Cleanup, context updates
-│               │   ├── context_manager.py  # Token management
-│               │   ├── message_formatter.py # Message formatting
-│               │   ├── streaming.py        # Response streaming
-│               │   ├── tool_discovery.py   # Auto-discover tools
-│               │   ├── tool_execution.py   # Execute tool calls
-│               │   ├── tool_parsing.py     # Parse tool calls from LLM
-│               │   ├── tool_selection.py   # Interactive tool selection
-│               │   └── terminal_ui.py      # Terminal UI helpers
-│               └── voice_processing/   # Voice input/output (optional)
-│                   ├── speech_to_text.py   # Whisper transcription
-│                   ├── text_to_speech.py   # Piper TTS
-│                   ├── interaction.py      # Voice interaction manager
-│                   ├── vad.py              # Voice activity detection
-│                   ├── audio_recorder.py   # Audio capture
-│                   ├── audio_player.py     # Audio playback
-│                   └── audio_diagnostics.py # Audio device utilities
-├── pyproject.toml              # Project configuration
-├── README.md                   # User documentation
-├── CLAUDE.md                   # This file
+hailo-apps-prototype/
+├── hailo_agent/
+│   ├── __init__.py
+│   ├── agent.py              # Main entry point
+│   ├── config.py             # LLM configuration
+│   ├── state_manager.py      # Context state management
+│   ├── system_prompt.py      # System prompt generation
+│   ├── yaml_config.py        # YAML config loader
+│   ├── cli_state.py          # CLI state utilities
+│   ├── core/                 # Core utilities
+│   │   ├── logger.py         # Logging infrastructure
+│   │   ├── parser.py         # CLI argument parser
+│   │   ├── defines.py        # Constants and defaults
+│   │   ├── utils.py          # General utilities
+│   │   ├── installation.py   # Device detection
+│   │   └── hef_utils.py      # HEF model utilities
+│   ├── tools/                # Tool implementations
+│   │   ├── base.py           # Base tool class
+│   │   ├── math/             # Math operations tool
+│   │   ├── weather/          # Weather API tool
+│   │   ├── rgb_led/          # RGB LED control
+│   │   ├── servo/            # Servo motor control
+│   │   ├── elevator/         # Elevator demo tool
+│   │   └── _template/        # Template for new tools
+│   ├── llm/                  # LLM utilities
+│   │   ├── context.py        # Token management
+│   │   ├── messages.py       # Message formatting
+│   │   ├── streaming.py      # Response streaming
+│   │   ├── tool_discovery.py # Auto-discover tools
+│   │   ├── tool_execution.py # Execute tool calls
+│   │   ├── tool_parsing.py   # Parse tool calls from LLM
+│   │   ├── tool_selection.py # Interactive tool selection
+│   │   └── terminal_ui.py    # Terminal UI helpers
+│   ├── voice/                # Voice input/output (optional)
+│   │   ├── speech_to_text.py # Whisper transcription
+│   │   ├── text_to_speech.py # Piper TTS
+│   │   ├── interaction.py    # Voice interaction manager
+│   │   ├── vad.py            # Voice activity detection
+│   │   └── audio_*.py        # Audio utilities
+│   └── testing/              # Test framework
+│       ├── harness.py        # Test harness
+│       ├── benchmark.py      # Benchmarking
+│       └── metrics.py        # Test metrics
+├── hailo_apps/               # (Legacy - to be removed)
+├── pyproject.toml            # Project configuration
+├── README.md                 # User documentation
+├── CLAUDE.md                 # This file
 └── .gitignore
 ```
 
@@ -81,13 +75,13 @@ hailo-agent-tools/
 
 ```bash
 # Text mode (default)
-python -m hailo_apps.python.gen_ai_apps.agent_tools_example.agent
+python -m hailo_agent.agent
 
 # Voice mode (requires voice dependencies)
-python -m hailo_apps.python.gen_ai_apps.agent_tools_example.agent --voice
+python -m hailo_agent.agent --voice
 
-# List available models
-python -m hailo_apps.python.gen_ai_apps.agent_tools_example.agent --list-models
+# Or use the installed command
+hailo-agent
 ```
 
 ### Installation
@@ -115,7 +109,7 @@ pip install -e ".[dev]"
 
 ### Creating New Tools
 
-1. Copy `tools/_template/` to `tools/your_tool_name/`
+1. Copy `hailo_agent/tools/_template/` to `hailo_agent/tools/your_tool_name/`
 2. Implement the tool interface in `tool.py`:
    - `name: str` - Unique identifier
    - `description: str` - Instructions for the LLM
@@ -143,8 +137,8 @@ pip install -e ".[dev]"
 | `state_manager.py` | Context persistence, save/load snapshots |
 | `system_prompt.py` | Generate system prompts with tool definitions |
 | `tools/base.py` | `BaseTool` abstract class, `ToolResult` dataclass |
-| `llm_utils/streaming.py` | Response generation with streaming |
-| `llm_utils/tool_discovery.py` | Auto-discover and load tools |
+| `llm/streaming.py` | Response generation with streaming |
+| `llm/tool_discovery.py` | Auto-discover and load tools |
 
 ## Dependencies
 
@@ -167,7 +161,7 @@ pip install -e ".[dev]"
 ## Architecture Notes
 
 ### Tool Discovery Flow
-1. `tool_discovery.py` scans `tools/` directory
+1. `llm/tool_discovery.py` scans `tools/` directory
 2. Each tool package must have `tool.py` with required interface
 3. Tools are loaded dynamically at runtime
 4. Tool schemas are combined into system prompt
@@ -205,7 +199,7 @@ pip install -e ".[dev]"
 ### Common Tasks
 
 **Adding a new tool:**
-- Copy `_template/` directory
+- Copy `tools/_template/` directory
 - Implement required interface
 - Add tests if complex
 
@@ -219,8 +213,6 @@ pip install -e ".[dev]"
 
 ## Resources
 
-- [Agent Tools README](hailo_apps/python/gen_ai_apps/agent_tools_example/README.md) - Detailed usage guide
-- [Testing Guide](hailo_apps/python/gen_ai_apps/agent_tools_example/testing/TESTING.md) - Test framework docs
 - [Hailo Developer Zone](https://hailo.ai/developer-zone/)
 - [HailoRT Documentation](https://hailo.ai/developer-zone/documentation/)
 

@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hailo-agent-tools"
+name = "hailo-agent"
 version = "1.0.0"
 description = "Interactive CLI chat agent with Hailo LLM models and function calling capabilities"
 readme = "README.md"
@@ -42,13 +42,13 @@ hardware = [
 ]
 
 [project.scripts]
-hailo-agent = "hailo_apps.python.gen_ai_apps.agent_tools_example.agent:main"
+hailo-agent = "hailo_agent.agent:main"
 
 [tool.setuptools.packages.find]
-include = ["hailo_apps*"]
+include = ["hailo_agent*"]
 
 [tool.setuptools.package-data]
-"hailo_apps" = ["**/*.yaml"]
+"hailo_agent" = ["**/*.yaml"]
 
 [tool.ruff]
 target-version = "py310"
@@ -84,4 +84,4 @@ ignore = [
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
-known-first-party  = ["hailo_apps"]
+known-first-party  = ["hailo_agent"]

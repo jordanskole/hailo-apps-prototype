@@ -1,4 +1,4 @@
-# Hailo Agent Tools
+# Hailo Agent
 
 Interactive CLI chat agent that uses Hailo LLM models with function calling capabilities. The agent automatically discovers tools and allows the LLM to call them during conversations.
 
@@ -21,7 +21,7 @@ This project provides an AI agent framework for Hailo accelerators with:
 
 ```bash
 # Clone the repository
-git clone https://github.com/hailo-ai/hailo-apps-prototype.git
+git clone <repo-url>
 cd hailo-apps-prototype
 
 # Install base dependencies
@@ -41,10 +41,10 @@ pip install -e ".[dev]"
 
 ```bash
 # Text mode (default)
-python -m hailo_apps.python.gen_ai_apps.agent_tools_example.agent
+python -m hailo_agent.agent
 
 # Voice mode
-python -m hailo_apps.python.gen_ai_apps.agent_tools_example.agent --voice
+python -m hailo_agent.agent --voice
 
 # Or use the installed command
 hailo-agent
@@ -70,7 +70,7 @@ hailo-agent
 
 ## Creating New Tools
 
-1. Create a new directory in `hailo_apps/python/gen_ai_apps/agent_tools_example/tools/`
+1. Create a new directory in `hailo_agent/tools/`
 2. Add `__init__.py`, `tool.py`, and `config.yaml`
 3. Implement the tool interface (see `tools/_template/` for reference)
 
@@ -80,28 +80,24 @@ Tools are automatically discovered - no code changes needed in the agent.
 
 ```
 hailo-apps-prototype/
-├── hailo_apps/
-│   ├── python/
-│   │   ├── core/common/          # Core utilities (logging, parser, etc.)
-│   │   └── gen_ai_apps/
-│   │       ├── agent_tools_example/  # Main agent application
-│   │       │   ├── agent.py          # Entry point
-│   │       │   ├── tools/            # Tool implementations
-│   │       │   └── testing/          # Test framework
-│   │       └── gen_ai_utils/
-│   │           ├── llm_utils/        # LLM utilities
-│   │           └── voice_processing/ # Voice input/output
-│   └── config/                   # Configuration management
+├── hailo_agent/
+│   ├── agent.py          # Main entry point
+│   ├── config.py         # Configuration
+│   ├── core/             # Core utilities (logging, parser, etc.)
+│   ├── tools/            # Tool implementations
+│   │   ├── base.py
+│   │   ├── math/
+│   │   ├── weather/
+│   │   ├── rgb_led/
+│   │   ├── servo/
+│   │   └── elevator/
+│   ├── llm/              # LLM utilities
+│   ├── voice/            # Voice input/output (optional)
+│   └── testing/          # Test framework
 ├── pyproject.toml
 ├── CLAUDE.md
 └── README.md
 ```
-
-## Documentation
-
-- [Agent Tools Example README](hailo_apps/python/gen_ai_apps/agent_tools_example/README.md) - Detailed usage and configuration
-- [Testing Guide](hailo_apps/python/gen_ai_apps/agent_tools_example/testing/TESTING.md) - Test framework documentation
-- [LLM Utils README](hailo_apps/python/gen_ai_apps/gen_ai_utils/llm_utils/README.md) - LLM utility documentation
 
 ## License
 
