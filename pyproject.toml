@@ -1,0 +1,87 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hailo-agent-tools"
+version = "1.0.0"
+description = "Interactive CLI chat agent with Hailo LLM models and function calling capabilities"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    # Core dependencies
+    "numpy",
+    "python-dotenv",
+    "pyyaml",
+]
+
+[project.optional-dependencies]
+# Development tools - install with: pip install -e ".[dev]"
+dev = [
+    "ruff>=0.5.7",
+    "pre-commit>=3.7.0",
+    "pytest>=7.0.0",
+]
+
+# Voice mode dependencies - install with: pip install -e ".[voice]"
+voice = [
+    "PyAudio",
+    "piper-tts",
+    "sounddevice==0.5.1",
+    "webrtcvad-wheels",
+]
+
+# Hardware dependencies for Raspberry Pi - install with: pip install -e ".[hardware]"
+hardware = [
+    "rpi5-ws2812",      # RGB LED control
+    "rpi-hardware-pwm", # Servo control
+]
+
+[project.scripts]
+hailo-agent = "hailo_apps.python.gen_ai_apps.agent_tools_example.agent:main"
+
+[tool.setuptools.packages.find]
+include = ["hailo_apps*"]
+
+[tool.setuptools.package-data]
+"hailo_apps" = ["**/*.yaml"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+exclude = [
+  ".git", ".hg", ".mypy_cache", ".ruff_cache", ".venv", "venv", "build", "dist",
+  "__pycache__", "site-packages",
+]
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style  = "double"
+line-ending  = "lf"
+
+[tool.ruff.lint]
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "I",   # import sorting
+  "B",   # bugbear
+  "UP",  # pyupgrade
+  "C4",  # comprehensions
+  "W",   # pycodestyle warnings
+  "RUF", # ruff-specific rules
+]
+ignore = [
+  "E402",  # allow gi.require_version before imports
+  "F403",  # star import used
+  "F405",  # star import names undefined
+  "E501",  # line length handled by formatter
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-first-party  = ["hailo_apps"]

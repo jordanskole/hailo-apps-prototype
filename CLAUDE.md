@@ -1,130 +1,229 @@
-# CLAUDE.md - AI Assistant Guide for hailo-apps-prototype
+# CLAUDE.md - AI Assistant Guide for hailo-agent-tools
 
 This document provides context and guidelines for AI assistants working on this repository.
 
 ## Project Overview
 
-**hailo-apps-prototype** is a prototype repository for developing applications that leverage Hailo AI accelerators. Hailo processors are designed for edge AI inference, enabling efficient deployment of neural networks on embedded devices.
+**hailo-agent-tools** is an interactive CLI chat agent that uses Hailo LLM models with function calling capabilities. The agent automatically discovers tools and allows the LLM to call them during conversations.
 
-### Project Status
+This project was extracted from the larger `hailo-ai/hailo-apps` repository to provide a focused, standalone implementation of the agent tools framework.
 
-This is a new prototype project. The codebase is being actively developed.
+### Key Features
+
+- **Tool Discovery**: Automatic discovery of tools from the `tools/` directory
+- **Function Calling**: LLM can invoke tools during conversations
+- **Voice Support**: Optional voice input/output mode (requires additional dependencies)
+- **Hardware Control**: Support for RGB LEDs, servos, and other hardware on Raspberry Pi
+- **Context Management**: Token-based context management with automatic cleanup
 
 ## Repository Structure
 
 ```
-hailo-apps-prototype/
-├── CLAUDE.md           # This file - AI assistant guidelines
-└── (project files to be added)
-```
-
-As the project grows, expect the following common structure for Hailo applications:
-
-```
-hailo-apps-prototype/
-├── src/                # Application source code
-├── models/             # Hailo-compiled neural network models (.hef files)
-├── configs/            # Configuration files
-├── scripts/            # Build, deployment, and utility scripts
-├── tests/              # Test files
-├── docs/               # Documentation
-└── requirements.txt    # Python dependencies (if applicable)
+hailo-agent-tools/
+├── hailo_apps/
+│   ├── config/
+│   │   └── config_manager.py       # Configuration management
+│   └── python/
+│       ├── core/
+│       │   └── common/             # Core utilities
+│       │       ├── core.py         # Main utilities (parser, model resolution)
+│       │       ├── defines.py      # Constants and defaults
+│       │       ├── hailo_logger.py # Logging infrastructure
+│       │       ├── parser.py       # CLI argument parser
+│       │       ├── installation_utils.py # Device detection
+│       │       ├── camera_utils.py # Camera device utilities
+│       │       └── hef_utils.py    # HEF model utilities
+│       └── gen_ai_apps/
+│           ├── agent_tools_example/    # Main agent application
+│           │   ├── agent.py            # Entry point
+│           │   ├── config.py           # LLM configuration
+│           │   ├── state_manager.py    # Context state management
+│           │   ├── system_prompt.py    # System prompt generation
+│           │   ├── yaml_config.py      # YAML config loader
+│           │   ├── cli_state.py        # CLI state utilities
+│           │   ├── tools/              # Tool implementations
+│           │   │   ├── base.py         # Base tool class
+│           │   │   ├── math/           # Math operations tool
+│           │   │   ├── weather/        # Weather API tool
+│           │   │   ├── rgb_led/        # RGB LED control
+│           │   │   ├── servo/          # Servo motor control
+│           │   │   ├── elevator/       # Elevator demo tool
+│           │   │   └── _template/      # Template for new tools
+│           │   └── testing/            # Test framework
+│           └── gen_ai_utils/
+│               ├── llm_utils/          # LLM utilities
+│               │   ├── agent_utils.py      # Cleanup, context updates
+│               │   ├── context_manager.py  # Token management
+│               │   ├── message_formatter.py # Message formatting
+│               │   ├── streaming.py        # Response streaming
+│               │   ├── tool_discovery.py   # Auto-discover tools
+│               │   ├── tool_execution.py   # Execute tool calls
+│               │   ├── tool_parsing.py     # Parse tool calls from LLM
+│               │   ├── tool_selection.py   # Interactive tool selection
+│               │   └── terminal_ui.py      # Terminal UI helpers
+│               └── voice_processing/   # Voice input/output (optional)
+│                   ├── speech_to_text.py   # Whisper transcription
+│                   ├── text_to_speech.py   # Piper TTS
+│                   ├── interaction.py      # Voice interaction manager
+│                   ├── vad.py              # Voice activity detection
+│                   ├── audio_recorder.py   # Audio capture
+│                   ├── audio_player.py     # Audio playback
+│                   └── audio_diagnostics.py # Audio device utilities
+├── pyproject.toml              # Project configuration
+├── README.md                   # User documentation
+├── CLAUDE.md                   # This file
+└── .gitignore
 ```
 
 ## Development Guidelines
 
-### General Conventions
-
-1. **Code Style**: Follow standard style guides for the language in use (PEP 8 for Python, etc.)
-2. **Documentation**: Document all public APIs and complex logic
-3. **Testing**: Write tests for new functionality
-4. **Commits**: Use clear, descriptive commit messages
-
-### Hailo-Specific Considerations
-
-When working with Hailo hardware and SDKs:
-
-1. **Model Files**: `.hef` (Hailo Executable Format) files are compiled neural network models
-2. **HailoRT**: The Hailo Runtime library for inference on Hailo devices
-3. **TAPPAS**: Hailo's application development framework for GStreamer-based pipelines
-4. **Dataflow Compiler**: Used to compile models to HEF format
-
-### Environment Setup
-
-Hailo applications typically require:
-
-- Hailo SDK (HailoRT, Dataflow Compiler)
-- Python 3.8+ (for Python-based applications)
-- GStreamer (for TAPPAS-based applications)
-- Appropriate Hailo PCIe driver or USB driver installed
-
-## Commands
-
-### Common Development Commands
-
-(To be updated as project develops)
+### Running the Agent
 
 ```bash
-# Install dependencies (example)
-pip install -r requirements.txt
+# Text mode (default)
+python -m hailo_apps.python.gen_ai_apps.agent_tools_example.agent
 
-# Run tests (example)
-pytest tests/
+# Voice mode (requires voice dependencies)
+python -m hailo_apps.python.gen_ai_apps.agent_tools_example.agent --voice
 
-# Build/compile (example)
-./scripts/build.sh
+# List available models
+python -m hailo_apps.python.gen_ai_apps.agent_tools_example.agent --list-models
 ```
+
+### Installation
+
+```bash
+# Base installation
+pip install -e .
+
+# With voice support
+pip install -e ".[voice]"
+
+# With hardware support (Raspberry Pi)
+pip install -e ".[hardware]"
+
+# Development dependencies
+pip install -e ".[dev]"
+```
+
+### Code Style
+
+- Python 3.10+ required
+- Follow PEP 8 style guide
+- Use `ruff` for linting: `ruff check .`
+- Use `ruff format` for formatting
+
+### Creating New Tools
+
+1. Copy `tools/_template/` to `tools/your_tool_name/`
+2. Implement the tool interface in `tool.py`:
+   - `name: str` - Unique identifier
+   - `description: str` - Instructions for the LLM
+   - `schema: dict` - JSON schema for parameters
+   - `run(input: dict) -> dict` - Execution function
+3. Configure tool in `config.yaml`
+4. Tools are auto-discovered - no code changes needed
+
+### Tool Return Format
+
+```python
+{
+    "ok": bool,      # Success status
+    "result": Any,   # Result if ok=True
+    "error": str     # Error message if ok=False
+}
+```
+
+## Key Files Reference
+
+| File | Purpose |
+|------|---------|
+| `agent.py` | Main entry point, CLI handling, chat loop |
+| `config.py` | LLM parameters, hardware mode settings |
+| `state_manager.py` | Context persistence, save/load snapshots |
+| `system_prompt.py` | Generate system prompts with tool definitions |
+| `tools/base.py` | `BaseTool` abstract class, `ToolResult` dataclass |
+| `llm_utils/streaming.py` | Response generation with streaming |
+| `llm_utils/tool_discovery.py` | Auto-discover and load tools |
+
+## Dependencies
+
+### Required
+- `hailo-platform` - Hailo SDK (installed separately)
+- `numpy` - Array operations
+- `pyyaml` - Configuration files
+- `python-dotenv` - Environment variables
+
+### Optional (Voice Mode)
+- `sounddevice` - Audio I/O
+- `piper-tts` - Text-to-speech
+- `PyAudio` - Audio interface
+- `webrtcvad-wheels` - Voice activity detection
+
+### Optional (Hardware)
+- `rpi5-ws2812` - RGB LED control on Raspberry Pi
+- `rpi-hardware-pwm` - Servo control on Raspberry Pi
 
 ## Architecture Notes
 
-### Typical Hailo Application Patterns
+### Tool Discovery Flow
+1. `tool_discovery.py` scans `tools/` directory
+2. Each tool package must have `tool.py` with required interface
+3. Tools are loaded dynamically at runtime
+4. Tool schemas are combined into system prompt
 
-1. **Inference Pipeline**: Load HEF model → Configure input/output → Run inference → Post-process results
-2. **GStreamer Pipeline**: Video source → Decode → Hailo inference element → Post-process → Display/output
-3. **Multi-model Pipeline**: Chain multiple models for complex AI tasks
+### LLM Interaction Flow
+1. User input received
+2. System prompt + tools sent to LLM
+3. LLM response parsed for tool calls (`<tool_call>JSON</tool_call>`)
+4. Tool executed if present
+5. Result added to context
+6. LLM generates final response
 
-### Key Concepts
-
-- **Virtual Device**: Software emulation when no hardware is present
-- **HEF**: Compiled model format optimized for Hailo hardware
-- **Quantization**: Models must be quantized for Hailo deployment
+### Context Management
+- Token-based (not message-based)
+- Clears at 80% capacity
+- Supports save/load of context snapshots
+- Caches system prompts for faster startup
 
 ## AI Assistant Guidelines
 
 ### When Implementing Features
 
-1. **Understand the task**: Read existing code before making changes
-2. **Use existing patterns**: Follow established conventions in the codebase
-3. **Keep it simple**: Avoid over-engineering; implement only what's requested
-4. **Test changes**: Verify functionality when possible
+1. Read existing code before making changes
+2. Follow established patterns in the codebase
+3. Keep implementations simple and focused
+4. Test changes when possible
 
 ### Code Quality
 
 - Prefer clarity over cleverness
-- Handle errors appropriately but don't over-engineer error handling
+- Handle errors appropriately but don't over-engineer
 - Use meaningful variable and function names
 - Keep functions focused and single-purpose
 
-### File Organization
+### Common Tasks
 
-- Place new source files in appropriate directories
-- Keep related functionality together
-- Avoid creating unnecessary abstraction layers
+**Adding a new tool:**
+- Copy `_template/` directory
+- Implement required interface
+- Add tests if complex
 
-### Git Workflow
+**Modifying LLM behavior:**
+- Edit `system_prompt.py` for general behavior
+- Edit tool `description` for tool-specific behavior
 
-1. Work on the designated feature branch
-2. Make atomic commits with clear messages
-3. Push changes to the feature branch when complete
+**Changing hardware settings:**
+- Edit `config.py` for default values
+- Use CLI arguments for runtime changes
 
 ## Resources
 
+- [Agent Tools README](hailo_apps/python/gen_ai_apps/agent_tools_example/README.md) - Detailed usage guide
+- [Testing Guide](hailo_apps/python/gen_ai_apps/agent_tools_example/testing/TESTING.md) - Test framework docs
 - [Hailo Developer Zone](https://hailo.ai/developer-zone/)
 - [HailoRT Documentation](https://hailo.ai/developer-zone/documentation/)
-- [Hailo Model Zoo](https://github.com/hailo-ai/hailo_model_zoo)
-- [TAPPAS Documentation](https://github.com/hailo-ai/tappas)
 
 ---
 
 *Last updated: 2026-01-28*
-*Note: This file should be updated as the project evolves and new conventions are established.*
