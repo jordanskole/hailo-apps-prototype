@@ -11,10 +11,8 @@ from typing import Any, Dict, Optional
 from hailo_platform import VDevice
 from hailo_platform.genai import LLM
 
-from hailo_agent.llm import (
-    message_formatter,
-    context_manager,
-)
+from hailo_agent.llm import messages as message_formatter
+from hailo_agent.llm import context as context_manager
 
 logger = logging.getLogger(__name__)
 
