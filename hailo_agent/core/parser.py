@@ -8,7 +8,7 @@ import argparse
 try:
     from hailo_agent.core.logger import add_logging_cli_args, get_logger
 except ImportError:
-    from .hailo_logger import add_logging_cli_args, get_logger
+    from .logger import add_logging_cli_args, get_logger
 
 hailo_logger = get_logger(__name__)
 

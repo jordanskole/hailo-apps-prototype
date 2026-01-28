@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Tuple
 import re
 
-from .hailo_logger import get_logger
+from .logger import get_logger
 from .core import get_resource_path
 from .defines import RESOURCES_JSON_DIR_NAME
 
