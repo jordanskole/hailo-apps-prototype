@@ -38,7 +38,7 @@ from .defines import (
     X86_NAME_I,
     X86_POSSIBLE_NAME,
 )
-from .hailo_logger import get_logger
+from .logger import get_logger
 
 hailo_logger = get_logger(__name__)
 

@@ -4,7 +4,7 @@ import subprocess
 import time
 
 from .defines import UDEV_CMD
-from .hailo_logger import get_logger
+from .logger import get_logger
 
 hailo_logger = get_logger(__name__)
 
