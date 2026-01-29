@@ -269,7 +269,7 @@ AGENT_APP = "agent"
 
 # Gen AI model defaults
 VLM_MODEL_NAME_H10 = "Qwen2-VL-2B-Instruct"
-LLM_MODEL_NAME_H10 = "Qwen2.5-1.5B-Instruct"
+LLM_MODEL_NAME_H10 = "Qwen2.5-Coder-1.5B-Instruct"
 LLM_CODER_MODEL_NAME_H10 = "Qwen2.5-Coder-1.5B-Instruct"
 WHISPER_MODEL_NAME_H10 = "Whisper-Base"
 
@@ -279,7 +279,7 @@ TARGET_PLAYBACK_SR = 48000  # Target sample rate for playback (standard for hard
 CHUNK_SIZE = 1024  # Number of frames per buffer
 
 VOICE_ASSISTANT_APP = "voice_assistant"
-VOICE_ASSISTANT_MODEL_NAME = "Qwen2.5-1.5B-Instruct"
+VOICE_ASSISTANT_MODEL_NAME = "Qwen2.5-Coder-1.5B-Instruct"
 
 # Piper TTS defaults
 TTS_MODEL_NAME = "en_US-amy-low"

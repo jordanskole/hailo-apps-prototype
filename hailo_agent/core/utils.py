@@ -227,8 +227,8 @@ def list_models_for_app(app_name: str, arch: str | None = None) -> None:
         print("\nNo Hailo device detected.")
 
     print("\nFor Gen-AI apps (agent, llm_chat, vlm_chat), available models include:")
-    print("   - Qwen2.5-1.5B-Instruct (default for LLM)")
-    print("   - Qwen2.5-Coder-1.5B-Instruct")
+    print("   - Qwen2.5-Coder-1.5B-Instruct (default for LLM)")
+    print("   - Qwen2.5-1.5B-Instruct")
     print("   - Qwen2-VL-2B-Instruct (for VLM)")
 
     print("\nUsage: --hef-path <model_name_or_path>")

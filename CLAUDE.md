@@ -102,7 +102,7 @@ python -m hailo_agent.agent --voice --hef-path Qwen2.5-Coder-1.5B-Instruct
 ls resources/models/hailo10h/*.hef
 ```
 
-**Note:** The `--hef-path` flag is required unless the default model (`Qwen2.5-1.5B-Instruct`) is installed. Available models depend on what's in `/usr/local/hailo/resources/models/hailo10h/`.
+**Note:** The `--hef-path` flag can be omitted if the default model (`Qwen2.5-Coder-1.5B-Instruct`) is installed. Available models depend on what's in `/usr/local/hailo/resources/models/hailo10h/`.
 
 ### Installation
 
@@ -188,8 +188,8 @@ This allows existing code to use familiar names while the actual files have clea
 Models are stored in `/usr/local/hailo/resources/models/hailo10h/` (symlinked to `resources/`).
 
 Common Gen AI models:
-- `Qwen2.5-1.5B-Instruct` - Default LLM (may not be installed)
-- `Qwen2.5-Coder-1.5B-Instruct` - Coder variant (commonly available)
+- `Qwen2.5-Coder-1.5B-Instruct` - Default LLM (commonly installed)
+- `Qwen2.5-1.5B-Instruct` - Base instruction-tuned variant
 - `Qwen2-VL-2B-Instruct` - Vision-Language model
 - `Whisper-Base` - Speech-to-text
 

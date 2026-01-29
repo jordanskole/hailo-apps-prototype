@@ -24,30 +24,36 @@ This project provides an AI agent framework for Hailo accelerators with:
 git clone <repo-url>
 cd hailo-apps-prototype
 
-# Install base dependencies
+# Recommended: use the setup script (creates resources symlink, venv, installs package)
+./setup.sh
+source venv/bin/activate
+
+# Or install manually
 pip install -e .
 
-# For voice mode support
-pip install -e ".[voice]"
-
-# For Raspberry Pi hardware control
-pip install -e ".[hardware]"
-
-# For development
-pip install -e ".[dev]"
+# Optional extras
+pip install -e ".[voice]"      # Voice mode support
+pip install -e ".[hardware]"   # Raspberry Pi hardware control
+pip install -e ".[dev]"        # Development dependencies
 ```
 
 ## Quick Start
 
 ```bash
-# Text mode (default)
+# Run with the default model (Qwen2.5-Coder-1.5B-Instruct)
+python -m hailo_agent.agent --tool math
+
+# Specify a different model
+python -m hailo_agent.agent --tool math --hef-path Qwen2.5-1.5B-Instruct
+
+# Interactive tool selection (omit --tool)
 python -m hailo_agent.agent
 
 # Voice mode
 python -m hailo_agent.agent --voice
 
-# Or use the installed command
-hailo-agent
+# List available models
+ls resources/models/hailo10h/*.hef
 ```
 
 ## Available Tools
