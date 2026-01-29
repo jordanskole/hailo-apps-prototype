@@ -1,6 +1,5 @@
 import logging
 import numpy as np
-import webrtcvad
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +25,7 @@ class VoiceActivityDetector:
         self.aggressiveness = aggressiveness
         self.energy_threshold = energy_threshold
 
+        import webrtcvad
         self.vad = webrtcvad.Vad(aggressiveness)
 
         # webrtcvad supports 10, 20, or 30ms frames.
