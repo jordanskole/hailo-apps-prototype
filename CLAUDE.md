@@ -32,7 +32,7 @@ hailo-apps-prototype/
 │   │   ├── logger.py         # Logging infrastructure
 │   │   ├── parser.py         # CLI argument parser
 │   │   ├── defines.py        # Constants and defaults
-│   │   ├── utils.py          # General utilities
+│   │   ├── utils.py          # General utilities, model resolution
 │   │   ├── installation.py   # Device detection
 │   │   └── hef_utils.py      # HEF model utilities
 │   ├── tools/                # Tool implementations
@@ -44,8 +44,9 @@ hailo-apps-prototype/
 │   │   ├── elevator/         # Elevator demo tool
 │   │   └── _template/        # Template for new tools
 │   ├── llm/                  # LLM utilities
-│   │   ├── context.py        # Token management
-│   │   ├── messages.py       # Message formatting
+│   │   ├── __init__.py       # Module exports with aliases
+│   │   ├── context.py        # Token management (alias: context_manager)
+│   │   ├── messages.py       # Message formatting (alias: message_formatter)
 │   │   ├── streaming.py      # Response streaming
 │   │   ├── tool_discovery.py # Auto-discover tools
 │   │   ├── tool_execution.py # Execute tool calls
@@ -56,13 +57,14 @@ hailo-apps-prototype/
 │   │   ├── speech_to_text.py # Whisper transcription
 │   │   ├── text_to_speech.py # Piper TTS
 │   │   ├── interaction.py    # Voice interaction manager
-│   │   ├── vad.py            # Voice activity detection
+│   │   ├── vad.py            # Voice activity detection (lazy imports)
 │   │   └── audio_*.py        # Audio utilities
 │   └── testing/              # Test framework
 │       ├── harness.py        # Test harness
 │       ├── benchmark.py      # Benchmarking
 │       └── metrics.py        # Test metrics
-├── hailo_apps/               # (Legacy - to be removed)
+├── resources/                # Symlink to /usr/local/hailo/resources (created by setup.sh)
+├── setup.sh                  # Setup script (creates symlink, venv, installs package)
 ├── pyproject.toml            # Project configuration
 ├── README.md                 # User documentation
 ├── CLAUDE.md                 # This file
@@ -71,23 +73,50 @@ hailo-apps-prototype/
 
 ## Development Guidelines
 
+### Quick Start
+
+```bash
+# Run setup script (creates resources symlink, venv, installs package)
+./setup.sh
+
+# Activate the virtual environment
+source venv/bin/activate
+
+# Run the agent with a tool
+python -m hailo_agent.agent --tool math --hef-path Qwen2.5-Coder-1.5B-Instruct
+```
+
 ### Running the Agent
 
 ```bash
-# Text mode (default)
-python -m hailo_agent.agent
+# Text mode with specific model (recommended)
+python -m hailo_agent.agent --tool math --hef-path Qwen2.5-Coder-1.5B-Instruct
+
+# Interactive tool selection (omit --tool)
+python -m hailo_agent.agent --hef-path Qwen2.5-Coder-1.5B-Instruct
 
 # Voice mode (requires voice dependencies)
-python -m hailo_agent.agent --voice
+python -m hailo_agent.agent --voice --hef-path Qwen2.5-Coder-1.5B-Instruct
 
-# Or use the installed command
-hailo-agent
+# List available models
+ls resources/models/hailo10h/*.hef
 ```
+
+**Note:** The `--hef-path` flag is required unless the default model (`Qwen2.5-1.5B-Instruct`) is installed. Available models depend on what's in `/usr/local/hailo/resources/models/hailo10h/`.
 
 ### Installation
 
 ```bash
-# Base installation
+# Recommended: Use setup script
+./setup.sh
+
+# Or manual installation:
+# 1. Create resources symlink
+ln -s /usr/local/hailo/resources resources
+
+# 2. Create venv and install
+python3 -m venv venv
+source venv/bin/activate
 pip install -e .
 
 # With voice support
@@ -137,8 +166,34 @@ pip install -e ".[dev]"
 | `state_manager.py` | Context persistence, save/load snapshots |
 | `system_prompt.py` | Generate system prompts with tool definitions |
 | `tools/base.py` | `BaseTool` abstract class, `ToolResult` dataclass |
+| `llm/__init__.py` | Module exports with aliases (see below) |
 | `llm/streaming.py` | Response generation with streaming |
 | `llm/tool_discovery.py` | Auto-discover and load tools |
+| `core/utils.py` | Model resolution, resource paths |
+| `core/defines.py` | Constants, default model names |
+
+### LLM Module Aliases
+
+The `llm/__init__.py` exports modules with legacy-compatible aliases:
+
+```python
+from hailo_agent.llm import context_manager  # Actually llm/context.py
+from hailo_agent.llm import message_formatter  # Actually llm/messages.py
+```
+
+This allows existing code to use familiar names while the actual files have cleaner names.
+
+### Available Models
+
+Models are stored in `/usr/local/hailo/resources/models/hailo10h/` (symlinked to `resources/`).
+
+Common Gen AI models:
+- `Qwen2.5-1.5B-Instruct` - Default LLM (may not be installed)
+- `Qwen2.5-Coder-1.5B-Instruct` - Coder variant (commonly available)
+- `Qwen2-VL-2B-Instruct` - Vision-Language model
+- `Whisper-Base` - Speech-to-text
+
+Check available models with: `ls resources/models/hailo10h/*.hef`
 
 ## Dependencies
 
@@ -219,3 +274,4 @@ pip install -e ".[dev]"
 ---
 
 *Last updated: 2026-01-28*
+*Session notes: Fixed import errors, added setup.sh, resources symlink support*
