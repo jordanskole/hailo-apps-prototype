@@ -51,6 +51,14 @@ from .defines import (
     RESOURCE_TYPE_VIDEO,
     RESOURCE_TYPE_MODEL,
     CAMERA_KEYWORDS,
+    # Gen AI apps and models
+    AGENT_APP,
+    LLM_CHAT_APP,
+    VLM_CHAT_APP,
+    WHISPER_CHAT_APP,
+    LLM_MODEL_NAME_H10,
+    VLM_MODEL_NAME_H10,
+    WHISPER_MODEL_NAME_H10,
 )
 
 from .logger import get_logger
@@ -130,6 +138,11 @@ def get_model_name(pipeline_name: str, arch: str) -> str:
         POSE_ESTIMATION_PIPELINE: POSE_ESTIMATION_MODEL_NAME_H8 if is_h8 else POSE_ESTIMATION_MODEL_NAME_H8L,
         FACE_DETECTION_PIPELINE: FACE_DETECTION_MODEL_NAME_H8 if is_h8 else FACE_DETECTION_MODEL_NAME_H8L,
         FACE_RECOGNITION_PIPELINE: FACE_RECOGNITION_MODEL_NAME_H8 if is_h8 else FACE_RECOGNITION_MODEL_NAME_H8L,
+        # Gen AI apps (Hailo10H only)
+        AGENT_APP: LLM_MODEL_NAME_H10,
+        LLM_CHAT_APP: LLM_MODEL_NAME_H10,
+        VLM_CHAT_APP: VLM_MODEL_NAME_H10,
+        WHISPER_CHAT_APP: WHISPER_MODEL_NAME_H10,
     }
     name = pipeline_map[pipeline_name]
     hailo_logger.debug(f"Resolved model name: {name}")

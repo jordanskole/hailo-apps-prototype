@@ -73,8 +73,10 @@ Thumbs.db
 # Project specific
 *.cache
 context_*.cache
+**/contexts/
 *.log
 *.hef
+resources
 
 # Ruff
 .ruff_cache/
