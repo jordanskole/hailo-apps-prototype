@@ -11,8 +11,8 @@ from typing import Any, Dict, Optional
 from hailo_platform import VDevice
 from hailo_platform.genai import LLM
 
-from hailo_agent.llm import messages as message_formatter
-from hailo_agent.llm import context as context_manager
+from .messages import messages_tool
+from .context import add_to_context
 
 logger = logging.getLogger(__name__)
 
@@ -37,11 +37,11 @@ def update_context_with_tool_result(
     log.debug("Tool result: %s", tool_result_text)
 
     # LLM has context, just add the tool result
-    prompt = [message_formatter.messages_tool(tool_response_message)]
+    prompt = [messages_tool(tool_response_message)]
 
     # Add to context by making a minimal generation (just to update context)
     log.debug("Updating context")
-    context_manager.add_to_context(llm, prompt, logger_instance=log)
+    add_to_context(llm, prompt, logger_instance=log)
 
 
 def cleanup_resources(
